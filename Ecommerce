@@ -1,0 +1,112 @@
+
+
+How to Create an E-Commerce website with Python Django
+E-commerce is now part of our daily life, we use e-commerce websites to order anything and everything. Did you ever wonder if we can develop one on our own?
+
+
+It sounds complex but it’s actually not, we can create an e-commerce website very easily using python django.
+
+Django is an open-source python framework, which is widely used to create web development projects because of its inbuilt functionalities and rapid development.
+
+Project Prerequisites
+
+We will use the following technologies:
+
+Front-end technologies:
+
+HTML: displays content on web page
+CSS: creates beautiful styles
+Bootstrap: html, css, and javascript framework used to build responsive websites.
+Back-end technologies:
+
+
+Python: programming language.
+Django framework: web development framework
+To install Django, you can use the pip installer from cmd/terminal.
+
+pip install Django
+Download Ecommerce Python Code
+
+Please download the source code of python e-commerce website: Ecommerce Website Python Code
+
+Steps to Create an Ecommerce website with Python Django
+
+Let’s create an ecommerce website with python django
+
+1. Starting project:
+
+First of all, we have to create a project and an app. Commands to start the project and app
+
+django-admin startproject OnlineShopping
+cd OnlineShopping
+django-admin startapp website
+2. Writing Models
+
+Code:
+
+from django.db import models
+from django.contrib.auth.models import User
+ 
+# Create your models here.
+class Customer(models.Model):
+    name = models.CharField(max_length=200,null=True)
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    date_created = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.name
+ 
+class Product(models.Model):
+    name = models.CharField(max_length=200,null=True)
+    image = models.ImageField(null=True,blank=True)
+    description = models.CharField(max_length=400,null=True)
+    def __str__(self):
+        return self.name
+    
+class Order(models.Model):
+    product = models.ForeignKey( Product,null=True, on_delete=models.SET_NULL)
+    customer = models.ForeignKey(Customer,null=True, on_delete=models.SET_NULL)
+    date_ordered = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20,default= 'PENDING')
+    def __str__(self):
+        return self.name
+We have used Django’s default database i.e. Sqlite3. We have created three models in this file.
+
+Product: This model stores product details like image, name, description.
+Customer: Model stores customer details.
+Order: This model stores order related details like buyer’s information, product’s information, date ordered, and the status of the order (pending, packed, delivered, canceled, etc)
+To apply the database changes, run the following
+
+
+Py manage.py makemigrations
+Py manage.py migrate
+3. forms.py
+
+Code:
+
+from django.forms import ModelForm
+from .models import *
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+ 
+class createuserform(UserCreationForm):
+    class Meta:
+        model=User
+        fields=['username','password'] 
+ 
+class createorderform(ModelForm):
+    class Meta:
+        model=Order
+        fields="__all__"
+        exclude=['status']
+ 
+class createproductform(ModelForm):
+    class Meta:
+        model=Product
+        fields='__all__'
+ 
+class createcustomerform(ModelForm):
+    class Meta:
+        model=Customer
+        fields='__all__'
+        exclude=['user']
